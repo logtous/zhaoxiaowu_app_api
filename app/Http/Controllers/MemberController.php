@@ -94,13 +94,18 @@ class MemberController extends Controller
 
         $member = Member::query()
             ->where('username', $username)
-            ->where('password', $password)->first();
+            ->where('password', $password)->first()->makeHidden(['password'])->toArray();
+
+        $member['user'] = [
+            'date' => $member['date'],
+            'money' => $member['money'],
+        ];
 
         if ($member){
             return Response()->json([
                 'success' => true,
                 'message' => '登录成功',
-                'data' => $member->makeHidden(['password'])->toArray()
+                'data' => $member
             ]);
         }else{
             return Response()->json([
@@ -116,6 +121,12 @@ class MemberController extends Controller
         $member = $request->input('json');
         $member = json_decode($member, true);
         $member['created_at'] = now();
+        $member['date'] = date('Y-m-d', time());
+        $member['money'] = 1000;
+        $member['user'] = [
+            'date' => $member['date'],
+            'money' => $member['money'],
+        ];
         $member['token'] = md5($member['username'].$member['password'].time());
         $result = Member::query()->insert($member);
 

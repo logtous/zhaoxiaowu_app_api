@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('name')->comment('姓名');
             $table->boolean('gender')->comment('性别');
             $table->date('birthday')->comment('生日');
+            $table->date('date')->comment('注册日期');
+            $table->integer('money')->comment('支出上限');
             $table->tinyInteger('solar')->comment('阳历or阴历');
             $table->timestamps();
         });

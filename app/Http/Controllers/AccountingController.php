@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Accounting;
+use http\Client\Response;
 use Illuminate\Http\Request;
 
 class AccountingController extends Controller
@@ -12,9 +13,24 @@ class AccountingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $accouting = Accounting::query()->where('date', $request->input('date'))->first();
+
+        if ($accouting) {
+            return Response()->json([
+                'success' => true,
+                'message' => 'ok',
+                'data' => $accouting
+            ]);
+        }else{
+            return Response()->json([
+                'success' => false,
+                'message' => 'fail',
+                'data' => []
+            ]);
+        }
+
     }
 
     /**
@@ -67,9 +83,25 @@ class AccountingController extends Controller
      * @param  \App\Models\Accounting  $accounting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Accounting $accounting)
+    public function update(Request $request)
     {
-        //
+        $accouting = $request->input('json');
+        $accouting = json_decode($accouting, true);
+        $accouting['created_at'] = now();
+
+        if (Accounting::query()->updateOrCreate($accouting, $accouting)) {
+            return Response()->json([
+                'success' => true,
+                'message' => 'ok',
+                'data' => $accouting
+            ]);
+        }else{
+            return Response()->json([
+                'success' => false,
+                'message' => 'fail',
+                'data' => []
+            ]);
+        }
     }
 
     /**
@@ -78,8 +110,38 @@ class AccountingController extends Controller
      * @param  \App\Models\Accounting  $accounting
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Accounting $accounting)
+    public function destroy(Request $request)
     {
-        //
+        $accouting = Accounting::query()->where('t_id', $request->input('id'))->first();
+
+        if ($accouting && Accounting::query()->where('t_id', $request->input('id'))->delete()) {
+            return Response()->json([
+                'success' => true,
+                'message' => 'ok',
+                'data' => $accouting
+            ]);
+        }else{
+            return Response()->json([
+                'success' => false,
+                'message' => 'fail',
+                'data' => []
+            ]);
+        }
+    }
+
+    public function type(Request $request)
+    {
+        $aciton = $request->input('action');
+
+        $aciton_type = [
+            ['name' => '收入', 'id' => 0],
+            ['name' => '支出', 'id' => 1],
+        ];
+
+        return Response()->json([
+            'success' => true,
+            'message' => 'ok',
+            'data' => $aciton_type[$aciton]
+        ]);
     }
 }

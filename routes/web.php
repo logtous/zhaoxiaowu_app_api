@@ -16,3 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::any('/zxw/user', [MemberController::class, 'login']);
 Route::post('/zxw/user/register', [MemberController::class, 'register']);
+
+Route::get('/zxw/AccountingType', [\App\Http\Controllers\AccountingController::class, 'type']);
+
+Route::get('/zxw/AccountingHistory', [\App\Http\Controllers\AccountingController::class, 'index']);
+Route::put('/zxw/AccountingHistory', [\App\Http\Controllers\AccountingController::class, 'update']);
+Route::delete('/zxw/AccountingHistory', [\App\Http\Controllers\AccountingController::class, 'destroy']);
+
