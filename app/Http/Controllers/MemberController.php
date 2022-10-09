@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\Member;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+
 
 class MemberController extends Controller
 {
@@ -92,19 +92,45 @@ class MemberController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
 
-        Log::info(__METHOD__, [$request->all()]);
+        $member = Member::query()
+            ->where('username', $username)
+            ->where('password', $password)->first();
 
-        try {
-            $decrypted = Crypt::decryptString($password);
-            Log::info(__METHOD__, [$decrypted]);
-            return $decrypted;
-        } catch (DecryptException $e) {
-            //
+        if ($member){
+            return Response()->json([
+                'success' => true,
+                'message' => '登录成功',
+                'data' => $member->makeHidden(['password'])->toArray()
+            ]);
+        }else{
+            return Response()->json([
+                'success' => false,
+                'message' => '账号或密码错误',
+                'data' => []
+            ]);
         }
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
+        $member = $request->input('json');
+        $member = json_decode($member, true);
+        $member['created_at'] = now();
+        $member['token'] = md5($member['username'].$member['password'].time());
+        $result = Member::query()->insert($member);
 
+        if ($result) {
+            return Response()->json([
+                'success' => true,
+                'message' => '注册成功',
+                'data' => $member
+            ]);
+        }else{
+            return Response()->json([
+                'success' => false,
+                'message' => '注册失败',
+                'data' => []
+            ]);
+        }
     }
 }

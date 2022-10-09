@@ -12,6 +12,9 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'zxw/*'
+        'zxw/user',
+        'zxw/user/register',
+        'zxw/AccountingType',
+        'zxw/AccountingHistory'
     ];
 }

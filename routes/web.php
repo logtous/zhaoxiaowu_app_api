@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/zxw/user', [MemberController::class, 'login']);
+Route::any('/zxw/user', [MemberController::class, 'login']);
 Route::post('/zxw/user/register', [MemberController::class, 'register']);

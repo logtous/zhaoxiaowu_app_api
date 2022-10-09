@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class LoginRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,8 +26,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'required|max:255',
-            'password' => 'required'
+            'json' => 'required'
         ];
     }
 
@@ -43,8 +42,7 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.required' => '账号必填',
-            'password.required' => '密码必填'
+            'json.required' => '账号信息必填'
         ];
     }
 }

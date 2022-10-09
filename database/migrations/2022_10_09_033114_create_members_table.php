@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('username')->comment('账号');
             $table->string('password')->comment('密码');
+            $table->string('token')->comment('token');
             $table->string('phone')->comment('手机号');
             $table->string('name')->comment('姓名');
             $table->boolean('gender')->comment('性别');
