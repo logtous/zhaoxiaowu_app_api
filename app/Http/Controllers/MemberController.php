@@ -97,6 +97,7 @@ class MemberController extends Controller
             ->where('password', $password)->first()->makeHidden(['password'])->toArray();
 
         $member['user'] = [
+            'id' => $member['id'],
             'date' => $member['date'],
             'money' => $member['money'],
         ];
@@ -124,6 +125,7 @@ class MemberController extends Controller
         $member['date'] = date('Y-m-d', time());
         $member['money'] = 1000;
         $member['user'] = [
+            'id' => $member['id'],
             'date' => $member['date'],
             'money' => $member['money'],
         ];
